@@ -1,16 +1,19 @@
-fetch('nfts.json')
+fetch("nfts.json")
   .then(res => res.json())
   .then(nfts => {
-    const gallery = document.getElementById('gallery');
+    const gallery = document.getElementById("gallery");
+
     nfts.forEach(nft => {
-      const card = document.createElement('div');
-      card.className = 'card';
+      const card = document.createElement("div");
+      card.className = "nft-card";
+
       card.innerHTML = `
-        <a href="viewer.html?id=${nft.id}" target="_blank">
+        <a href="viewer.html?id=${nft.id}">
           <img src="${nft.media.preview_gif}" alt="${nft.name}">
-          <h2>${nft.name}</h2>
+          <h3>${nft.name}</h3>
         </a>
       `;
+
       gallery.appendChild(card);
     });
   });
