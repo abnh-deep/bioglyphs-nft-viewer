@@ -1,0 +1,35 @@
+[
+{
+  "name": "Glyph-0044-13TB59",
+  "description": "Exploration of emergent complexity from simple rules, where cellular patterns evolve over time into complex and ever-changing structures",
+  "animation_url": "ipfs://Qma7bwuAbiRNrCCU7jiq5ML8stTGhYyudyRs4gngg2s9ma",
+  "external_url": "https://bioglyphs-pixel.github.io/bioglyphs-nft-site/nft-details.html?id=bioglyph_Glyph-0044-13TB59",
+  "image": "ipfs://QmZFeucMC9j99mZ7EGJDZTpx79SGzqW73wSUUKQJgn8Rzr",
+  "attributes": [
+    {
+      "trait_type": "Grid Size",
+      "value": 45
+    },
+    {
+      "trait_type": "Cell Size",
+      "value": 8
+    },
+    {
+      "trait_type": "Base Color",
+      "value": "#ffffff"
+    },
+    {
+      "trait_type": "Halo Color",
+      "value": "rgba(255,0,0,0.24)"
+    },
+    {
+      "trait_type": "Background Color",
+      "value": "#1e1e1e"
+    },
+    {
+      "trait_type": "Particle Color",
+      "value": "rgba(255,255,255,0.08)"
+    }
+  ]
+}
+]
