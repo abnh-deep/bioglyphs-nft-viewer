@@ -2,33 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>NFT Viewer</title>
-  <style>
-    body { background: #000; color: #fff; font-family: sans-serif; text-align: center; padding: 30px; }
-    video { max-width: 90vw; max-height: 60vh; border-radius: 12px; }
-    ul { list-style: none; padding: 0; }
-    li { margin: 5px 0; }
-  </style>
+  <title>Bioglyph Viewer</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="viewer">Loading...</div>
+  <div id="nft-details">Loading...</div>
   <script>
-    const id = new URLSearchParams(location.search).get('id');
-    fetch('nfts.json')
+    const params = new URLSearchParams(location.search);
+    const id = params.get("id");
+
+    fetch("nfts.json")
       .then(res => res.json())
       .then(nfts => {
         const nft = nfts.find(n => n.id === id);
-        if (!nft) return document.body.innerHTML = 'NFT not found';
+        if (!nft) {
+          document.getElementById("nft-details").innerText = "NFT not found.";
+          return;
+        }
+
         document.title = nft.name;
-        document.getElementById('viewer').innerHTML = `
+
+        document.getElementById("nft-details").innerHTML = `
           <h1>${nft.name}</h1>
-          <video src="${nft.media.animation_url}" autoplay loop muted controls></video>
+          <video src="${nft.media.animation_url}" autoplay loop controls width="400"></video>
           <p>${nft.description}</p>
+          <h3>Attributes</h3>
           <ul>
-            ${nft.attributes.map(attr => `<li><strong>${attr.trait_type}:</strong> ${attr.value}</li>`).join('')}
+            ${nft.attributes.map(attr => `<li><b>${attr.trait_type}:</b> ${attr.value}</li>`).join("")}
           </ul>
-          <p><a href="${nft.media.viewer_html}" target="_blank">🔗 عرض تفاعلي</a></p>
-          <p><a href="index.html">← العودة إلى المعرض</a></p>
+          <p><a href="${nft.media.viewer_html}" target="_blank">Open Interactive Viewer</a></p>
+          <p><a href="index.html">← Back to Gallery</a></p>
         `;
       });
   </script>
