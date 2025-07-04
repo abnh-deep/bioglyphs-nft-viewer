@@ -1,99 +1,117 @@
 body {
-  font-family: sans-serif;
-  background: #f4f4f4;
-  color: #333;
+  font-family: 'Inter', sans-serif;
+  background: #fefefe;
+  color: #111;
   margin: 0;
-  padding: 0;
 }
 
-.header {
+header {
   text-align: center;
   padding: 2rem;
-  background: #fff;
-  border-bottom: 1px solid #ddd;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  margin: 0;
 }
 
 .filters {
-  text-align: center;
-  padding: 1rem;
+  margin-top: 1rem;
 }
 
-.filter-btn {
-  margin: 0.5rem;
+.filters button {
+  margin: 0.3rem;
   padding: 0.5rem 1rem;
-  background: #007bff;
-  color: white;
   border: none;
+  background: #0070f3;
+  color: white;
   border-radius: 4px;
   cursor: pointer;
 }
 
-.nft-grid {
+main#gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1rem;
-  padding: 1rem;
+  padding: 2rem;
 }
 
 .nft-card {
   background: white;
-  border-radius: 8px;
+  border: 1px solid #ddd;
   padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
   cursor: pointer;
-  transition: transform 0.2s ease-in-out;
 }
 
 .nft-card:hover {
   transform: scale(1.02);
 }
 
+.nft-card img {
+  width: 100%;
+  border-radius: 4px;
+}
+
 .modal {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: none;
+  inset: 0;
+  display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 100;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .modal-content {
-  background: #fff;
+  background: white;
   padding: 2rem;
   border-radius: 8px;
   max-width: 600px;
-  width: 90%;
+  z-index: 101;
   position: relative;
 }
 
 .modal-close {
   position: absolute;
-  top: 1rem;
+  top: 0.5rem;
   right: 1rem;
+  background: transparent;
+  border: none;
   font-size: 1.5rem;
   cursor: pointer;
 }
 
-.modal-body img {
+.modal-content img,
+.modal-content video {
   width: 100%;
-  border-radius: 6px;
+  border-radius: 4px;
+  margin-bottom: 1rem;
 }
 
-.modal-body video {
-  width: 100%;
-  margin-top: 1rem;
-  border-radius: 6px;
+.attributes {
+  margin: 1rem 0;
 }
 
-.modal-links {
-  margin-top: 1rem;
+.attributes p {
+  margin: 0.2rem 0;
 }
 
 .modal-links a {
   margin-right: 1rem;
   text-decoration: none;
-  color: #007bff;
+  color: #0070f3;
 }
