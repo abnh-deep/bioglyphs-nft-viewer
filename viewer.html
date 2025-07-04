@@ -1,29 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>NFT Viewer</title>
+  <style>
+    body { background: #000; color: #fff; font-family: sans-serif; text-align: center; padding: 30px; }
+    video { max-width: 90vw; max-height: 60vh; border-radius: 12px; }
+    ul { list-style: none; padding: 0; }
+    li { margin: 5px 0; }
+  </style>
 </head>
 <body>
-  <div id="nft-display">Loading NFT...</div>
+  <div id="viewer">Loading...</div>
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
-
+    const id = new URLSearchParams(location.search).get('id');
     fetch('nfts.json')
       .then(res => res.json())
       .then(nfts => {
-        const nft = nfts.find(n => n.name.includes(id));
-        if (!nft) return document.body.innerHTML = "NFT not found.";
-
+        const nft = nfts.find(n => n.id === id);
+        if (!nft) return document.body.innerHTML = 'NFT not found';
         document.title = nft.name;
-        document.body.innerHTML = `
+        document.getElementById('viewer').innerHTML = `
           <h1>${nft.name}</h1>
-          <video src="${nft.animation_url.replace('ipfs://', 'https://ipfs.io/ipfs/')}" controls autoplay loop></video>
+          <video src="${nft.media.animation_url}" autoplay loop muted controls></video>
+          <p>${nft.description}</p>
           <ul>
-            ${nft.attributes.map(attr => `<li><b>${attr.trait_type}:</b> ${attr.value}</li>`).join('')}
+            ${nft.attributes.map(attr => `<li><strong>${attr.trait_type}:</strong> ${attr.value}</li>`).join('')}
           </ul>
-          <a href="index.html">← Back to Gallery</a>
+          <p><a href="${nft.media.viewer_html}" target="_blank">🔗 عرض تفاعلي</a></p>
+          <p><a href="index.html">← العودة إلى المعرض</a></p>
         `;
       });
   </script>
