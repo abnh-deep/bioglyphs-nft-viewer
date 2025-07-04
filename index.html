@@ -1,42 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bioglyphs - NFT Collection</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bioglyphs NFT Viewer</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="header">
-    <h1>Bioglyphs NFT Gallery</h1>
-    <p class="subtitle">Exploring emergent complexity through generative art</p>
-    <div class="filters">
-      <button data-filter="all" class="filter-btn active">All</button>
-      <button data-filter="45">Grid 45x45</button>
-      <button data-filter="90">Grid 90x90</button>
-      <button data-filter="white">White Base</button>
-      <button data-filter="blue">Blue Base</button>
-    </div>
+    <h1>Bioglyphs NFT Viewer</h1>
+    <p>Exploring digital organisms through emergent complexity.</p>
   </header>
 
-  <main>
-    <div id="nft-grid" class="nft-grid"></div>
-    <div id="loading" class="loading">Loading NFTs...</div>
-  </main>
+  <section class="filters">
+    <button class="filter-btn" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="45">Grid 45x45</button>
+    <button class="filter-btn" data-filter="90">Grid 90x90</button>
+    <button class="filter-btn" data-filter="white">Base White</button>
+    <button class="filter-btn" data-filter="blue">Base Blue</button>
+  </section>
 
-  <div id="nft-modal" class="modal">
+  <main id="nft-grid" class="nft-grid"></main>
+
+  <div class="modal" id="nft-modal">
     <div class="modal-content">
-      <span class="close" id="modal-close">&times;</span>
+      <span class="modal-close" id="modal-close">&times;</span>
       <div class="modal-body">
-        <img id="modal-image" src="" alt="" class="modal-image"/>
-        <video id="modal-video" controls class="modal-video" style="display:none;"></video>
         <h2 id="modal-title"></h2>
+        <img id="modal-image" src="" alt="NFT Preview" />
+        <video id="modal-video" controls style="display:none;"></video>
         <p id="modal-description"></p>
-        <ul id="modal-attributes" class="attributes"></ul>
-        <div class="actions">
-          <a id="modal-viewer-link" href="#" target="_blank">🔬 Interactive Viewer</a>
-          <a id="modal-opensea-link" href="#" target="_blank">💎 View on OpenSea</a>
-          <a id="modal-download" href="#" download>⬇️ Download Metadata</a>
+        <div id="modal-attributes"></div>
+        <div class="modal-links">
+          <a id="viewer-link" href="#" target="_blank">View Live</a>
+          <a id="download-link" href="#" download>Download Metadata</a>
         </div>
       </div>
     </div>
