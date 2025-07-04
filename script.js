@@ -1,45 +1,45 @@
-let nfts = [];
-let filtered = [];
+let allNFTs = [];
+let filteredNFTs = [];
 
 fetch("nfts.json")
   .then((res) => res.json())
   .then((data) => {
-    nfts = data;
-    filtered = nfts;
-    renderNFTs();
+    allNFTs = data;
+    filteredNFTs = allNFTs;
+    renderGallery();
     setupFilters();
   });
 
-function renderNFTs() {
-  const grid = document.getElementById("nft-grid");
-  grid.innerHTML = "";
-  filtered.forEach((nft) => {
+function renderGallery() {
+  const gallery = document.getElementById("gallery");
+  gallery.innerHTML = "";
+  filteredNFTs.forEach((nft) => {
     const card = document.createElement("div");
     card.className = "nft-card";
-    card.innerHTML = \`
-      <img src="\${nft.preview_gif}" alt="\${nft.name}" />
-      <h3>\${nft.name}</h3>
-    \`;
+    card.innerHTML = `
+      <img src="${nft.preview_gif}" alt="${nft.name}" />
+      <h3>${nft.name}</h3>
+    `;
     card.onclick = () => openModal(nft);
-    grid.appendChild(card);
+    gallery.appendChild(card);
   });
 }
 
 function setupFilters() {
-  document.querySelectorAll(".filter-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
+  document.querySelectorAll(".filters button").forEach((btn) => {
+    btn.onclick = () => {
       const val = btn.dataset.filter;
       if (val === "all") {
-        filtered = nfts;
+        filteredNFTs = allNFTs;
       } else if (val === "white") {
-        filtered = nfts.filter(n => n.attributes.some(a => a.value === "#ffffff"));
+        filteredNFTs = allNFTs.filter(n => n.attributes.some(a => a.value === "#ffffff"));
       } else if (val === "blue") {
-        filtered = nfts.filter(n => n.attributes.some(a => a.value === "#3907ed"));
+        filteredNFTs = allNFTs.filter(n => n.attributes.some(a => a.value === "#3907ed"));
       } else {
-        filtered = nfts.filter(n => n.attributes.some(a => a.value == val));
+        filteredNFTs = allNFTs.filter(n => n.attributes.some(a => a.value == val));
       }
-      renderNFTs();
-    });
+      renderGallery();
+    };
   });
 }
 
@@ -47,6 +47,7 @@ function openModal(nft) {
   document.getElementById("modal-title").textContent = nft.name;
   document.getElementById("modal-description").textContent = nft.description;
   document.getElementById("modal-image").src = nft.preview_gif;
+
   const video = document.getElementById("modal-video");
   if (nft.animation_url && nft.animation_url.endsWith(".mp4")) {
     video.src = nft.animation_url;
@@ -59,15 +60,20 @@ function openModal(nft) {
   attrDiv.innerHTML = "";
   (nft.attributes || []).forEach(attr => {
     const p = document.createElement("p");
-    p.textContent = \`\${attr.trait_type}: \${attr.value}\`;
+    p.textContent = `${attr.trait_type}: ${attr.value}`;
     attrDiv.appendChild(p);
   });
 
-  document.getElementById("viewer-link").href = nft.viewer_html || "#";
-  document.getElementById("download-link").href = nft.metadata_json || "#";
-  document.getElementById("nft-modal").style.display = "flex";
+  document.getElementById("modal-viewer").href = nft.viewer_html;
+  document.getElementById("modal-download").href = nft.metadata_json;
+
+  const tweetText = encodeURIComponent(`Check out this Bioglyph: ${nft.name}`);
+  const tweetUrl = encodeURIComponent(nft.viewer_html);
+  document.getElementById("modal-twitter").href = `https://twitter.com/intent/tweet?text=${tweetText}&url=${tweetUrl}`;
+
+  document.getElementById("modal").classList.remove("hidden");
 }
 
-document.getElementById("modal-close").onclick = () => {
-  document.getElementById("nft-modal").style.display = "none";
-};
+function closeModal() {
+  document.getElementById("modal").classList.add("hidden");
+}
