@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>NFT Viewer</title>
+</head>
+<body>
+  <div id="nft-display">Loading NFT...</div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    fetch('nfts.json')
+      .then(res => res.json())
+      .then(nfts => {
+        const nft = nfts.find(n => n.name.includes(id));
+        if (!nft) return document.body.innerHTML = "NFT not found.";
+
+        document.title = nft.name;
+        document.body.innerHTML = `
+          <h1>${nft.name}</h1>
+          <video src="${nft.animation_url.replace('ipfs://', 'https://ipfs.io/ipfs/')}" controls autoplay loop></video>
+          <ul>
+            ${nft.attributes.map(attr => `<li><b>${attr.trait_type}:</b> ${attr.value}</li>`).join('')}
+          </ul>
+          <a href="index.html">← Back to Gallery</a>
+        `;
+      });
+  </script>
+</body>
+</html>
