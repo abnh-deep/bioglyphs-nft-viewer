@@ -6,12 +6,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   updateTotalNftsCount();
   renderNFTs();
   setupEventListeners();
-  setupSmoothScrolling();
-  setupLazyLoading();
 });
 
 async function loadNFTs() {
-  const loader = document.getElementById("loader");
+  const loader = document.getElementById("loading");
   loader.style.display = "block";
   const res = await fetch("nfts.json");
   nftsData = await res.json();
@@ -21,13 +19,7 @@ async function loadNFTs() {
 
 function updateTotalNftsCount() {
   const countElement = document.getElementById("total-nfts");
-  const target = nftsData.length;
-  let count = 0;
-  const interval = setInterval(() => {
-    count++;
-    countElement.textContent = count;
-    if (count === target) clearInterval(interval);
-  }, 10);
+  countElement.textContent = nftsData.length;
 }
 
 function renderNFTs() {
@@ -35,208 +27,113 @@ function renderNFTs() {
   grid.innerHTML = "";
 
   if (filteredNfts.length === 0) {
-    grid.innerHTML = "<p>No NFTs match the selected filter.</p>";
+    grid.innerHTML = "<p>Aucun NFT trouvé.</p>";
     return;
   }
 
   filteredNfts.forEach((nft) => {
-    const card = createNFTCard(nft);
+    const card = document.createElement("div");
+    card.className = "nft-card";
+
+    const img = document.createElement("img");
+    img.src = convertIPFSToHTTPS(nft.image);
+    img.alt = nft.name;
+    card.appendChild(img);
+
+    card.addEventListener("click", () => openNFTModal(nft));
     grid.appendChild(card);
   });
 }
 
-function createNFTCard(nft) {
-  const card = document.createElement("div");
-  card.className = "nft-card";
-
-  const image = document.createElement("img");
-  image.dataset.src = convertIPFSToHTTPS(nft.image);
-  image.alt = nft.name;
-  image.className = "lazy-image";
-  image.onerror = () => {
-    image.style.display = "none";
-  };
-
-  const name = document.createElement("h3");
-  name.textContent = nft.name;
-
-  const description = document.createElement("p");
-  description.textContent = nft.description.slice(0, 80) + "...";
-
-  card.appendChild(image);
-  card.appendChild(name);
-  card.appendChild(description);
-
-  card.addEventListener("click", () => openNFTModal(nft));
-  return card;
-}
-
 function openNFTModal(nft) {
-  const modal = document.getElementById("nft-modal");
-  const modalContent = document.getElementById("modal-content");
-  modalContent.innerHTML = "";
+  document.getElementById("modal-title").textContent = nft.name;
+  document.getElementById("modal-description").textContent = nft.description;
+  document.getElementById("modal-image").src = convertIPFSToHTTPS(nft.image);
 
-  const title = document.createElement("h2");
-  title.textContent = nft.name;
+  // عرض الفيديو إن وُجد
+  const modalMedia = document.querySelector(".modal-media");
+  const existingVideo = modalMedia.querySelector("video");
+  if (existingVideo) existingVideo.remove();
 
-  const image = document.createElement("img");
-  image.src = convertIPFSToHTTPS(nft.image);
-  image.alt = nft.name;
-  image.style.maxWidth = "100%";
-  image.style.borderRadius = "8px";
-
-  modalContent.appendChild(title);
-  modalContent.appendChild(image);
-
-  // ✅ Show animation video if available
   if (nft.animation_url && nft.animation_url.endsWith(".mp4")) {
     const video = document.createElement("video");
     video.src = convertIPFSToHTTPS(nft.animation_url);
     video.controls = true;
-    video.style.width = "100%";
     video.style.marginTop = "1rem";
-    modalContent.appendChild(video);
+    video.style.maxWidth = "100%";
+    modalMedia.appendChild(video);
   }
 
-  const desc = document.createElement("p");
-  desc.textContent = nft.description;
-  modalContent.appendChild(desc);
+  // خصائص NFT
+  const attrList = document.getElementById("modal-attributes-list");
+  attrList.innerHTML = "";
+  (nft.attributes || []).forEach((attr) => {
+    const div = document.createElement("div");
+    div.className = "attribute";
+    div.innerHTML = `<span class="trait-type">${attr.trait_type}</span>: <span class="value">${attr.value}</span>`;
+    attrList.appendChild(div);
+  });
 
-  // ✅ Traits
-  if (nft.attributes && nft.attributes.length > 0) {
-    const traitsList = document.createElement("ul");
-    nft.attributes.forEach((attr) => {
-      const li = document.createElement("li");
-      li.textContent = `${attr.trait_type}: ${attr.value}`;
-      traitsList.appendChild(li);
-    });
-    modalContent.appendChild(traitsList);
+  // روابط
+  document.getElementById("modal-viewer-link").href = nft.external_url || "#";
+  document.getElementById("modal-opensea-link").href = `https://opensea.io/assets/matic/${nft.contract_address || '0x...'}?search[query]=${encodeURIComponent(nft.name)}`;
+
+  // زر تحميل metadata
+  let downloadBtn = document.getElementById("modal-download-link");
+  if (!downloadBtn) {
+    downloadBtn = document.createElement("a");
+    downloadBtn.id = "modal-download-link";
+    downloadBtn.className = "btn btn-secondary";
+    downloadBtn.textContent = "Télécharger Metadata";
+    document.querySelector(".modal-actions").appendChild(downloadBtn);
   }
+  downloadBtn.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(nft, null, 2));
+  downloadBtn.download = nft.name.replace(/\s+/g, "_") + ".json";
 
-  // ✅ External links
-  if (nft.external_url) {
-    const viewerLink = document.createElement("a");
-    viewerLink.href = nft.external_url;
-    viewerLink.target = "_blank";
-    viewerLink.textContent = "🔬 Open Interactive Viewer";
-    viewerLink.style.display = "block";
-    viewerLink.style.marginTop = "1rem";
-    modalContent.appendChild(viewerLink);
-  }
-
-  // ✅ Download Metadata Button
-  const metadataBtn = document.createElement("a");
-  metadataBtn.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(nft, null, 2));
-  metadataBtn.download = nft.name.replace(/\s+/g, '_') + '_metadata.json';
-  metadataBtn.textContent = '⬇️ Download Metadata';
-  metadataBtn.className = 'metadata-download-button';
-  metadataBtn.style.display = 'inline-block';
-  metadataBtn.style.marginTop = '1rem';
-  metadataBtn.style.padding = '0.5rem 1rem';
-  metadataBtn.style.background = '#333';
-  metadataBtn.style.color = '#fff';
-  metadataBtn.style.textDecoration = 'none';
-  metadataBtn.style.borderRadius = '6px';
-
-  modalContent.appendChild(metadataBtn);
-
-  modal.style.display = "block";
+  document.getElementById("nft-modal").classList.add("active");
 }
 
 function closeNFTModal() {
-  const modal = document.getElementById("nft-modal");
-  modal.style.display = "none";
+  document.getElementById("nft-modal").classList.remove("active");
 }
 
-function filterNFTs(filterType) {
-  switch (filterType) {
-    case "all":
-      filteredNfts = nftsData;
-      break;
-    case "45x45":
-      filteredNfts = nftsData.filter((nft) => nft.attributes?.some((attr) => attr.value === "45x45"));
-      break;
-    case "90x90":
-      filteredNfts = nftsData.filter((nft) => nft.attributes?.some((attr) => attr.value === "90x90"));
-      break;
-    case "white":
-      filteredNfts = nftsData.filter((nft) => nft.attributes?.some((attr) => attr.value === "#ffffff"));
-      break;
-    case "blue":
-      filteredNfts = nftsData.filter((nft) => nft.attributes?.some((attr) => attr.value === "#3907ed"));
-      break;
-    default:
-      filteredNfts = nftsData;
-  }
-  renderNFTs();
+function convertIPFSToHTTPS(url) {
+  return url?.startsWith("ipfs://")
+    ? url.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/")
+    : url;
 }
 
 function setupEventListeners() {
   document.querySelectorAll(".filter-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
+      document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+
       const filter = btn.getAttribute("data-filter");
-      filterNFTs(filter);
+      applyFilter(filter);
     });
   });
 
-  document.getElementById("close-modal").addEventListener("click", closeNFTModal);
-
-  window.addEventListener("click", (event) => {
-    const modal = document.getElementById("nft-modal");
-    if (event.target === modal) closeNFTModal();
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeNFTModal();
-  });
+  document.getElementById("modal-close").addEventListener("click", closeNFTModal);
+  document.getElementById("modal-overlay").addEventListener("click", closeNFTModal);
 }
 
-function convertIPFSToHTTPS(url) {
-  if (!url) return "";
-  return url.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/");
-}
-
-function debounce(func, wait) {
-  let timeout;
-  return function (...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), wait);
-  };
-}
-
-function setupSmoothScrolling() {
-  const sections = document.querySelectorAll("section");
-  const navLinks = document.querySelectorAll("nav a");
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        const id = entry.target.getAttribute("id");
-        const link = document.querySelector(`nav a[href="#${id}"]`);
-        if (entry.isIntersecting) {
-          navLinks.forEach((l) => l.classList.remove("active"));
-          link?.classList.add("active");
-        }
-      });
-    },
-    { threshold: 0.6 }
-  );
-
-  sections.forEach((section) => observer.observe(section));
-}
-
-function setupLazyLoading() {
-  const images = document.querySelectorAll("img.lazy-image");
-  const observer = new IntersectionObserver((entries, obs) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const img = entry.target;
-        img.src = img.dataset.src;
-        img.classList.remove("lazy-image");
-        obs.unobserve(img);
-      }
-    });
-  }, { threshold: 0.1 });
-
-  images.forEach((img) => observer.observe(img));
+function applyFilter(filter) {
+  switch (filter) {
+    case "45":
+      filteredNfts = nftsData.filter((n) => n.attributes?.some((a) => a.value === "45x45"));
+      break;
+    case "90":
+      filteredNfts = nftsData.filter((n) => n.attributes?.some((a) => a.value === "90x90"));
+      break;
+    case "white":
+      filteredNfts = nftsData.filter((n) => n.attributes?.some((a) => a.value === "#ffffff"));
+      break;
+    case "blue":
+      filteredNfts = nftsData.filter((n) => n.attributes?.some((a) => a.value === "#3907ed"));
+      break;
+    default:
+      filteredNfts = nftsData;
+  }
+  renderNFTs();
 }
