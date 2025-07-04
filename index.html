@@ -1,164 +1,47 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bioglyphs - Collection NFT d'Art Génératif</title>
-    <meta name="description" content="Bioglyphs - Collection NFT d'art génératif basée sur les automates cellulaires et le Jeu de la Vie de Conway. Découvrez des organismes numériques vivants qui évoluent selon des règles simples.">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bioglyphs - NFT Collection</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <h1 class="logo-text">Bioglyphs</h1>
-                </div>
-                <nav class="nav">
-                    <a href="#home" class="nav-link active">Accueil</a>
-                    <a href="#gallery" class="nav-link">Galerie</a>
-                    <a href="#about" class="nav-link">À Propos</a>
-                    <a href="#contact" class="nav-link">Contact</a>
-                </nav>
-            </div>
-        </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h2 class="hero-title">Organismes Numériques Vivants</h2>
-                <p class="hero-description">
-                    Explorez la complexité émergente à travers des œuvres d'art génératif créées avec les automates cellulaires. 
-                    Chaque NFT Bioglyph représente un organisme numérique unique qui évolue selon les règles simples du Jeu de la Vie de Conway, 
-                    créant des motifs complexes et en constante évolution.
-                </p>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <span class="stat-number" id="total-nfts">0</span>
-                        <span class="stat-label">NFTs Uniques</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">∞</span>
-                        <span class="stat-label">Évolutions Possibles</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="hero-particles"></div>
-    </section>
-
-    <!-- Gallery Section -->
-    <section id="gallery" class="gallery">
-        <div class="container">
-            <h2 class="section-title">Collection Bioglyphs</h2>
-            
-            <!-- Filters -->
-            <div class="filters">
-                <button class="filter-btn active" data-filter="all">Tous</button>
-                <button class="filter-btn" data-filter="45">Grille 45x45</button>
-                <button class="filter-btn" data-filter="90">Grille 90x90</button>
-                <button class="filter-btn" data-filter="white">Base Blanche</button>
-                <button class="filter-btn" data-filter="blue">Base Bleue</button>
-            </div>
-
-            <!-- NFT Grid -->
-            <div class="nft-grid" id="nft-grid">
-                <!-- NFT cards will be dynamically loaded here -->
-            </div>
-
-            <!-- Loading indicator -->
-            <div class="loading" id="loading">
-                <div class="loading-spinner"></div>
-                <p>Chargement des Bioglyphs...</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <div class="about-content">
-                <h2 class="section-title">À Propos de Bioglyphs</h2>
-                <div class="about-text">
-                    <p>
-                        Bioglyphs est une collection d'art génératif unique qui explore la beauté de la complexité émergente 
-                        à travers les automates cellulaires. Chaque œuvre est générée en utilisant le célèbre "Jeu de la Vie" 
-                        de John Conway, un système où des règles simples donnent naissance à des motifs complexes et imprévisibles.
-                    </p>
-                    <p>
-                        Ces organismes numériques évoluent dans le temps, créant des structures fascinantes qui oscillent 
-                        entre ordre et chaos. Chaque Bioglyph capture un moment unique dans cette danse éternelle de la vie artificielle, 
-                        préservé pour l'éternité sur la blockchain.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2 class="section-title">Contact & Liens</h2>
-            <div class="contact-links">
-                <a href="#" class="contact-link">
-                    <span class="contact-icon">🌐</span>
-                    <span>IPFS</span>
-                </a>
-                <a href="#" class="contact-link">
-                    <span class="contact-icon">⚡</span>
-                    <span>GitHub</span>
-                </a>
-                <a href="#" class="contact-link">
-                    <span class="contact-icon">🐦</span>
-                    <span>Twitter</span>
-                </a>
-                <a href="#" class="contact-link">
-                    <span class="contact-icon">💎</span>
-                    <span>OpenSea</span>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- NFT Detail Modal -->
-    <div class="modal" id="nft-modal">
-        <div class="modal-overlay" id="modal-overlay"></div>
-        <div class="modal-content">
-            <button class="modal-close" id="modal-close">&times;</button>
-            <div class="modal-body">
-                <div class="modal-media">
-                    <img id="modal-image" src="" alt="" class="modal-nft-image">
-                </div>
-                <div class="modal-details">
-                    <h3 id="modal-title" class="modal-nft-title"></h3>
-                    <p id="modal-description" class="modal-nft-description"></p>
-                    
-                    <div class="modal-attributes">
-                        <h4>Attributs</h4>
-                        <div id="modal-attributes-list" class="attributes-list"></div>
-                    </div>
-                    
-                    <div class="modal-actions">
-                        <a id="modal-download-link" href="#" class="btn btn-secondary" style="display: none;">Télécharger Metadata</a>
-                        <a id="modal-viewer-link" href="#" target="_blank" class="btn btn-primary">
-                            Viewer Interactif
-                        </a>
-                        <a id="modal-opensea-link" href="#" target="_blank" class="btn btn-secondary">
-                            Acheter sur OpenSea
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <header class="header">
+    <h1>Bioglyphs NFT Gallery</h1>
+    <p class="subtitle">Exploring emergent complexity through generative art</p>
+    <div class="filters">
+      <button data-filter="all" class="filter-btn active">All</button>
+      <button data-filter="45">Grid 45x45</button>
+      <button data-filter="90">Grid 90x90</button>
+      <button data-filter="white">White Base</button>
+      <button data-filter="blue">Blue Base</button>
     </div>
+  </header>
 
-    <script src="script.js"></script>
+  <main>
+    <div id="nft-grid" class="nft-grid"></div>
+    <div id="loading" class="loading">Loading NFTs...</div>
+  </main>
+
+  <div id="nft-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="modal-close">&times;</span>
+      <div class="modal-body">
+        <img id="modal-image" src="" alt="" class="modal-image"/>
+        <video id="modal-video" controls class="modal-video" style="display:none;"></video>
+        <h2 id="modal-title"></h2>
+        <p id="modal-description"></p>
+        <ul id="modal-attributes" class="attributes"></ul>
+        <div class="actions">
+          <a id="modal-viewer-link" href="#" target="_blank">🔬 Interactive Viewer</a>
+          <a id="modal-opensea-link" href="#" target="_blank">💎 View on OpenSea</a>
+          <a id="modal-download" href="#" download>⬇️ Download Metadata</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
-
