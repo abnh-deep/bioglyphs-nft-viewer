@@ -1,49 +1,47 @@
 body {
-  font-family: sans-serif;
+  font-family: Arial, sans-serif;
   background: #111;
-  color: #fff;
+  color: #eee;
   margin: 0;
   padding: 20px;
   text-align: center;
 }
 
 h1 {
-  margin-bottom: 30px;
+  color: #0ff;
 }
 
 #gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, 180px);
   gap: 20px;
-  padding: 0 10px;
+  justify-content: center;
+  margin-top: 30px;
 }
 
-.card {
+.nft-card {
   background: #222;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 0 10px #000;
+  border-radius: 8px;
+  padding: 10px;
   transition: transform 0.2s ease;
 }
 
-.card:hover {
+.nft-card:hover {
   transform: scale(1.05);
 }
 
-.card img {
+.nft-card img {
   width: 100%;
-  display: block;
+  border-radius: 4px;
 }
 
-.card h2 {
+.nft-card h3 {
   font-size: 0.9em;
-  margin: 10px 0;
+  margin: 5px 0;
   color: #0ff;
 }
 
-.card a {
+a {
+  color: #0cf;
   text-decoration: none;
-  color: inherit;
-  display: block;
-  padding: 10px;
 }
